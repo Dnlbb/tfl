@@ -1,0 +1,110 @@
+digraph NFA {
+    rankdir=LR;
+    node [shape=circle];
+
+    start [shape=point, label=""];
+    start -> A_L_star [label="ε"];
+
+    A_L_star    [label="A_L_star"];
+    Mid         [label="Mid"];
+
+    A_L_a       [label="A_L_a"];
+    A_L_in_aaa2 [label="A_L_in_aaa2"];
+
+    A_L_in_bbb1 [label="A_L_in_bbb1"];
+    A_L_in_bbb2 [label="A_L_in_bbb2"];
+
+    A_L_in_cc1  [label="A_L_in_cc1"];
+
+    A_L_ab_loop [label="A_L_ab_loop"];
+    A_L_ab_cc1  [label="A_L_ab_cc1"];
+    A_L_ab_cc2  [label="A_L_ab_cc2"];
+
+    A_L_star -> Mid       [label="ε"];
+    A_L_star -> A_L_a       [label="a"];
+    A_L_star -> A_L_in_bbb1 [label="b"];
+    A_L_star -> A_L_in_cc1  [label="c"];
+
+    A_L_a -> A_L_in_aaa2 [label="a"];
+    A_L_a -> A_L_star    [label="a"];
+    A_L_a -> A_L_ab_loop [label="b"];
+
+    A_L_in_aaa2 -> A_L_star [label="a"];
+
+    A_L_in_bbb1 -> A_L_in_bbb2 [label="b"];
+    A_L_in_bbb2 -> A_L_star    [label="b"];
+
+    A_L_in_cc1  -> A_L_star    [label="c"];
+
+    A_L_ab_loop -> A_L_ab_cc1  [label="c"];
+    A_L_ab_cc1  -> A_L_ab_cc2  [label="c"];
+    A_L_ab_cc2  -> A_L_ab_loop [label="c"];
+    A_L_ab_loop -> A_L_star    [label="ε"];
+
+
+    B_in_a      [label="B_in_a"];
+    B_in_aab2   [label="B_in_aab2"];
+
+    B_in_b      [label="B_in_b"];
+    B_in_b2     [label="B_in_b2"];
+    B_in_bbbb3  [label="B_in_bbbb3"];
+
+    B_aab_loop  [label="B_aab_loop"];
+    B_aab_cc1   [label="B_aab_cc1"];
+
+    R_star      [shape=doublecircle, label="R_star"];
+
+    Mid -> R_star [label="ε"];
+    Mid -> B_in_a [label="a"];
+    Mid -> B_in_b [label="b"];
+
+    B_in_a   -> Mid        [label="a"];
+    B_in_a   -> B_in_aab2  [label="a"];
+
+    B_in_aab2 -> B_aab_loop [label="b"];
+
+    B_aab_loop -> B_aab_cc1 [label="c"];
+    B_aab_cc1  -> B_aab_loop [label="c"];
+
+    B_aab_loop -> Mid [label="ε"];
+
+    B_in_b  -> B_in_b2 [label="b"];
+
+    B_in_b2 -> Mid        [label="b"];
+
+    B_in_b2    -> B_in_bbbb3 [label="b"];
+    B_in_bbbb3 -> Mid        [label="b"];
+
+
+    A_R_a        [label="A_R_a"];
+    A_R_in_aaa2  [label="A_R_in_aaa2"];
+
+    A_R_in_bbb1  [label="A_R_in_bbb1"];
+    A_R_in_bbb2  [label="A_R_in_bbb2"];
+
+    A_R_in_cc1   [label="A_R_in_cc1"];
+
+    A_R_ab_loop  [label="A_R_ab_loop"];
+    A_R_ab_cc1   [label="A_R_ab_cc1"];
+    A_R_ab_cc2   [label="A_R_ab_cc2"];
+    R_star    -> A_R_a       [label="a"];
+    R_star    -> A_R_in_bbb1 [label="b"];
+    R_star    -> A_R_in_cc1  [label="c"];
+
+    A_R_a -> A_R_in_aaa2 [label="a"];
+    A_R_a -> R_star      [label="a"];
+    A_R_a -> A_R_ab_loop [label="b"];
+
+    A_R_in_aaa2 -> R_star [label="a"];
+
+    A_R_in_bbb1 -> A_R_in_bbb2 [label="b"];
+    A_R_in_bbb2 -> R_star      [label="b"];
+
+    A_R_in_cc1  -> R_star [label="c"];
+
+    A_R_ab_loop -> A_R_ab_cc1 [label="c"];
+    A_R_ab_cc1  -> A_R_ab_cc2 [label="c"];
+    A_R_ab_cc2  -> A_R_ab_loop [label="c"];
+
+    A_R_ab_loop -> R_star [label="ε"];
+}
