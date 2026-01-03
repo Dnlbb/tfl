@@ -2,7 +2,7 @@ use fancy_regex::Regex;
 use rand::Rng;
 use std::process;
 
-const MAX_ENUM_LEN: usize = 15;
+const MAX_ENUM_LEN: usize = 10;
 
 
 const MAX_FUZZ_LEN: usize = 60;
@@ -496,66 +496,12 @@ fn dfa_accepts(word: &str) -> bool {
 }
 
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-enum CCountState {
-    C0,
-    C1,
-    C2,
-}
 
-impl CCountState {
-    #[inline(always)]
-    fn step(self, b: u8) -> Self {
-        use CCountState::*;
-        match (self, b) {
-            (C0, b'c') => C1,
-            (C0, b'a') | (C0, b'b') => C0,
-            (C1, b'c') => C2,
-            (C1, b'a') | (C1, b'b') => C1,
-            (C2, _) => C2,
-            (s, _) => s,
-        }
-    }
 
-    #[inline(always)]
-    fn is_accepting(self) -> bool {
-        !matches!(self, CCountState::C1)
-    }
-}
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-enum NoCacCbcState {
-    Gc0,
-    Gc1,
-    Gc2,
-    Gc3,
-    Dead,
-}
 
-impl NoCacCbcState {
-    #[inline(always)]
-    fn step(self, b: u8) -> Self {
-        use NoCacCbcState::*;
-        match (self, b) {
-            (Gc0, b'a') | (Gc0, b'b') => Gc0,
-            (Gc0, b'c') => Gc1,
-            (Gc1, b'a') => Gc2,
-            (Gc1, b'b') => Gc3,
-            (Gc1, b'c') => Gc1,
-            (Gc2, b'c') => Dead,
-            (Gc2, b'a') | (Gc2, b'b') => Gc0,
-            (Gc3, b'c') => Dead,
-            (Gc3, b'a') | (Gc3, b'b') => Gc0,
-            (Dead, _) => Dead,
-            _ => Dead,
-        }
-    }
 
-    #[inline(always)]
-    fn is_accepting(self) -> bool {
-        !matches!(self, NoCacCbcState::Dead)
-    }
-}
+
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 enum NoBcaState {
@@ -589,20 +535,173 @@ impl NoBcaState {
     }
 }
 
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+enum NoSingleCState {
+    Cc0,
+    Cc1,
+    Cc2,
+    Dead,
+}
+
+impl NoSingleCState {
+    #[inline(always)]
+    fn step(self, b: u8) -> Self {
+        use NoSingleCState::*;
+        match (self, b) {
+            (Cc0, b'c') => Cc1,
+            (Cc0, b'a') | (Cc0, b'b') => Cc0,
+
+            (Cc1, b'c') => Cc2,
+            (Cc1, b'a') | (Cc1, b'b') => Dead,
+
+            (Cc2, b'c') => Cc2,
+            (Cc2, b'a') | (Cc2, b'b') => Cc0,
+
+            (Dead, _) => Dead,
+            _ => Dead,
+        }
+    }
+
+    #[inline(always)]
+    fn is_accepting(self) -> bool {
+        matches!(self, NoSingleCState::Cc0 | NoSingleCState::Cc2)
+    }
+}
+
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+enum AbcInvState {
+    Abc0,
+    AbcAB,
+    AbcNE,
+    AbcC,
+    Dead,
+}
+
+impl AbcInvState {
+    #[inline(always)]
+    fn step(self, b: u8) -> Self {
+        use AbcInvState::*;
+        match (self, b) {
+            (Abc0, b'a') | (Abc0, b'b') => AbcAB,
+            (Abc0, b'c') => AbcC,
+
+            (AbcAB, b'a') | (AbcAB, b'b') => AbcAB,
+            (AbcAB, b'c') => AbcNE,
+
+            (AbcNE, b'c') => AbcC,
+            (AbcNE, b'a') | (AbcNE, b'b') => Dead,
+
+            (AbcC, b'c') => AbcC,
+            (AbcC, b'a') | (AbcC, b'b') => AbcAB,
+
+            (Dead, _) => Dead,
+            _ => Dead,
+        }
+    }
+
+    #[inline(always)]
+    fn is_accepting(self) -> bool {
+        matches!(self, AbcInvState::Abc0 | AbcInvState::AbcAB | AbcInvState::AbcC)
+    }
+}
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+enum NoBBBlockLen2State {
+    Bb0,
+    Bb1,
+    Bb2,
+    Bb3,
+    Dead,
+}
+
+impl NoBBBlockLen2State {
+    #[inline(always)]
+    fn step(self, b: u8) -> Self {
+        use NoBBBlockLen2State::*;
+        match (self, b) {
+            (Bb0, b'b') => Bb1,
+            (Bb0, b'a') | (Bb0, b'c') => Bb0,
+
+            (Bb1, b'b') => Bb2,
+            (Bb1, b'a') | (Bb1, b'c') => Bb0,
+
+            (Bb2, b'b') => Bb3,
+            (Bb2, b'a') | (Bb2, b'c') => Dead,
+
+            (Bb3, b'b') => Bb3,
+            (Bb3, b'a') | (Bb3, b'c') => Bb0,
+
+            (Dead, _) => Dead,
+            _ => Dead,
+        }
+    }
+
+    #[inline(always)]
+    fn is_accepting(self) -> bool {
+        matches!(self, NoBBBlockLen2State::Bb0
+            | NoBBBlockLen2State::Bb1
+            | NoBBBlockLen2State::Bb3)
+    }
+}
+
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+enum NoCBlockAorBThenCState {
+    Cb0,
+    CbC,
+    Cb1,
+    Dead,
+}
+
+impl NoCBlockAorBThenCState {
+    #[inline(always)]
+    fn step(self, b: u8) -> Self {
+        use NoCBlockAorBThenCState::*;
+        match (self, b) {
+            (Cb0, b'c') => CbC,
+            (Cb0, b'a') | (Cb0, b'b') => Cb0,
+
+            (CbC, b'c') => CbC,
+            (CbC, b'a') | (CbC, b'b') => Cb1,
+
+            (Cb1, b'c') => Dead,
+            (Cb1, b'a') | (Cb1, b'b') => Cb0,
+
+            (Dead, _) => Dead,
+            _ => Dead,
+        }
+    }
+
+    #[inline(always)]
+    fn is_accepting(self) -> bool {
+        !matches!(self, NoCBlockAorBThenCState::Dead)
+    }
+}
+
 fn pka_accepts(word: &str) -> bool {
     let mut dfa = DfaState::Q0;
-    let mut c = CCountState::C0;
-    let mut gc = NoCacCbcState::Gc0;
     let mut bc = NoBcaState::Bc0;
+    let mut cc = NoSingleCState::Cc0;
+    let mut abc = AbcInvState::Abc0;
+    let mut bb = NoBBBlockLen2State::Bb0;
+    let mut cb = NoCBlockAorBThenCState::Cb0;
 
     for b in word.bytes() {
         dfa = dfa.step(b);
-        c = c.step(b);
-        gc = gc.step(b);
+        cc = cc.step(b);
+        abc = abc.step(b);
+        bb = bb.step(b);
+        cb = cb.step(b);
         bc = bc.step(b);
     }
 
-    dfa.is_accepting() && c.is_accepting() && gc.is_accepting() && bc.is_accepting()
+    dfa.is_accepting()
+        && cc.is_accepting()
+        && abc.is_accepting()
+        && bb.is_accepting()
+        && cb.is_accepting()
+        && bc.is_accepting()
 }
 
 
@@ -681,7 +780,7 @@ fn main() {
         .expect("bad regex1");
 
     let re2 = Regex::new(
-        r"^((bbb|cc|ab((ccc)+)?|aaa?)+)?((aa(b((cc)+)?)?|bbbb?)+)?((bbb|cc|ab((ccc)+)?|aaa?)+)?$",
+        r"^((bbb|cc|a((?=b)b(ccc)*|aa?))+)?((bbb((?=b)b)?|aa((?=b)b(cc)*)?)+)?((bbb|cc|a((?=b)b(ccc)*|aa?))+)?$",
     )
         .expect("bad regex2");
 

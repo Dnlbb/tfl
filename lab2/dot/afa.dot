@@ -8,8 +8,10 @@ digraph {
     start -> amp
 
     amp -> Q0  [label="ε"]
-    amp -> c0  [label="ε"]
-    amp -> gc0 [label="ε"]
+    amp -> cc0  [label="ε"]
+    amp -> abc0 [label="ε"]
+    amp -> bb0  [label="ε"]
+    amp -> cb0 [label="ε"]
     amp -> bc0 [label="ε"]
 
     Q0  [label="Q0",  shape=doublecircle]
@@ -232,52 +234,101 @@ digraph {
     Q52 -> Q53 [label="c"]
     Q53 -> Q53 [label="c"]
 
-    c0 [label="c0", shape=doublecircle]
-    c1 [label="c1"]
-    c2 [label="c2", shape=doublecircle]
+    cc0 [label="cc0", shape=doublecircle]
+    cc1 [label="cc1"]
+    cc2 [label="cc2", shape=doublecircle]
 
-    c0 -> c0 [label="a"]
-    c0 -> c0 [label="b"]
-    c0 -> c1 [label="c"]
+    ccD [label="ccD"]
 
-    c1 -> c1 [label="a"]
-    c1 -> c1 [label="b"]
-    c1 -> c2 [label="c"]
+    cc0 -> cc0 [label="a"]
+    cc0 -> cc0 [label="b"]
+    cc0 -> cc1 [label="c"]
 
-    c2 -> c2 [label="a"]
-    c2 -> c2 [label="b"]
-    c2 -> c2 [label="c"]
+    cc1 -> cc2 [label="c"]
+    cc1 -> ccD [label="a"]
+    cc1 -> ccD [label="b"]
 
-    gc0 [label="gc0", shape=doublecircle]
-    gc1 [label="gc1", shape=doublecircle]
-    gc2 [label="gc2", shape=doublecircle]
-    gc3 [label="gc3", shape=doublecircle]
-    gcD  [label="gcD"]
+    cc2 -> cc2 [label="c"]
+    cc2 -> cc0 [label="a"]
+    cc2 -> cc0 [label="b"]
 
-    gc0 -> gc0 [label="a"]
-    gc0 -> gc0 [label="b"]
-    gc0 -> gc1 [label="c"]
+    ccD -> ccD [label="a"]
+    ccD -> ccD [label="b"]
+    ccD -> ccD [label="c"]
 
-    gc1 -> gc2 [label="a"]
-    gc1 -> gc3 [label="b"]
-    gc1 -> gc1 [label="c"]
+    abc0  [label="abc0", shape=doublecircle]
+    abcAB [label="abcAB", shape=doublecircle]
+    abcNE [label="abcNE"]
+    abcC  [label="abcC", shape=doublecircle]
+    abcD  [label="abcD"]
 
-    gc2 -> gcD   [label="c"]
-    gc2 -> gc0 [label="a"]
-    gc2 -> gc0 [label="b"]
+    abc0  -> abcAB [label="a"]
+    abc0  -> abcAB [label="b"]
+    abc0  -> abcC  [label="c"]
 
-    gc3 -> gcD   [label="c"]
-    gc3 -> gc0 [label="a"]
-    gc3 -> gc0 [label="b"]
+    abcAB -> abcAB [label="a"]
+    abcAB -> abcAB [label="b"]
+    abcAB -> abcNE [label="c"]
 
-    gcD -> gcD [label="a"]
-    gcD -> gcD [label="b"]
-    gcD -> gcD [label="c"]
+    abcNE -> abcC  [label="c"]
+    abcNE -> abcD  [label="a"]
+    abcNE -> abcD  [label="b"]
 
-    bc0 [label="bc0", shape=doublecircle]
-    bc1 [label="bc1", shape=doublecircle]
-    bc2 [label="bc2", shape=doublecircle]
-    bcD [label="bcD"]
+    abcC  -> abcC  [label="c"]
+    abcC  -> abcAB [label="a"]
+    abcC  -> abcAB [label="b"]
+
+    abcD -> abcD [label="a"]
+    abcD -> abcD [label="b"]
+    abcD -> abcD [label="c"]
+
+    bb0 [label="bb0", shape=doublecircle]
+    bb1 [label="bb1", shape=doublecircle]
+    bb2 [label="bb2"]
+    bb3 [label="bb3", shape=doublecircle]
+
+    bbD [label="bbD"]
+
+    bb0 -> bb0 [label="a"]
+    bb0 -> bb0 [label="c"]
+    bb0 -> bb1 [label="b"]
+
+    bb1 -> bb2 [label="b"]
+    bb1 -> bb0 [label="a"]
+    bb1 -> bb0 [label="c"]
+
+    bb2 -> bb3 [label="b"]
+    bb2 -> bbD [label="a"]
+    bb2 -> bbD [label="c"]
+
+    bb3 -> bb3 [label="b"]
+    bb3 -> bb0 [label="a"]
+    bb3 -> bb0 [label="c"]
+
+    bbD -> bbD [label="a"]
+    bbD -> bbD [label="b"]
+    bbD -> bbD [label="c"]
+
+    cb0   [label="cb0", shape=doublecircle]
+    cbC   [label="cbC", shape=doublecircle]
+    cb1   [label="cb1", shape=doublecircle]
+    cbD   [label="cbD"]
+
+    cb0 -> cbC [label="c"]
+    cb0 -> cb0 [label="a"]
+    cb0 -> cb0 [label="b"]
+
+    cbC -> cbC [label="c"]
+    cbC -> cb1 [label="a"]
+    cbC -> cb1 [label="b"]
+
+    cb1 -> cbD [label="c"]
+    cb1 -> cb0 [label="a"]
+    cb1 -> cb0 [label="b"]
+
+    cbD -> cbD [label="a"]
+    cbD -> cbD [label="b"]
+    cbD -> cbD [label="c"]
 
     bc0 -> bc1 [label="b"]
     bc0 -> bc0 [label="a"]
