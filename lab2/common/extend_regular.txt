@@ -1,0 +1,6 @@
+^
+((bbb|cc|ab((ccc)+)?|aaa?)+)?
+((aa(b((cc)+)?)?|bbbb?)+)?
+((bbb|cc|ab((ccc)+)?|aaa?)+)?
+$
+
